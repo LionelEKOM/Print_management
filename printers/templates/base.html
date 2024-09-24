@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,8 +11,13 @@
         {% endblock %}
     </title>
 
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
     {% block css_style %}
+    <link rel="stylesheet" href="{% static 'css/Hompage.css' %}">
     {% endblock %}
+
 
   </head>
   <body>

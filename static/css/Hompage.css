@@ -1,0 +1,23 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.carousel-item {
+    height: 80vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    height: 100%;
+}
+
+.main-content {
+    padding: 60px 0;
+}
+
+footer {
+    background-color: #7a7878;
+}
