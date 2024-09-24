@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Login Form</title>
+{% endblock %}
+<!---Custom CSS File--->
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<body>
+    {% block content %}
+        <div class="container">
+            {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <p class="text-center p-0">Mot de  passe ou identifiant incorrect</p>
+                </div>
+            {% endif %}
+            <div class="login form">
+            <header>Login</header>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="text" name="username"
+                value="{{ request.POST.username|default:'' }}" 
+                placeholder="Enter your username">
+                <input type="password"
+                name="password"
+                value="{{ request.POST.password|default:'' }}"
+                placeholder="Enter your password">
+                <a href="#">Forgot password?</a>
+                <!--<input type="button" class="button" value="Login">-->
+                <button type="submit" class="button">
+                    Connexion
+                </button>
+            </form>
+            </div>
+        </div>
+        {% endblock %}
+</body>

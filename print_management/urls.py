@@ -15,12 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path
 from django.conf.urls.static import static
 from print_management import settings
-from printers.views import HomePageView
+from printers.views import CustomLoginView, HomePageView, dashboard
+from django.contrib.auth.views import (LogoutView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HomePageView.as_view()),
+    path('', HomePageView.as_view(), name='home'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('dashboard/', dashboard, name='dashboard'),
+    path('logout/', LogoutView.as_view(), name='logout')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

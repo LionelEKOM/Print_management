@@ -129,9 +129,8 @@ MEDIA_ROOT = BASE_DIR / 'mediafiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# URL de redirection après connexion
-LOGIN_REDIRECT_URL = '/'
-# URL de redirection après déconnexion
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = '/login/'  # URL de connexion
+LOGIN_REDIRECT_URL = '/dashboard/'  # Redirection après connexion réussie
+LOGOUT_REDIRECT_URL = '/'  # Redirection après déconnexion
 
 AUTH_USER_MODEL = 'printers.CustomUser'
