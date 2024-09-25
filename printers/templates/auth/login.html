@@ -1,15 +1,19 @@
-{% extends 'base.html' %}
 {% load static %}
 {% block title %}
 <title>Login Form</title>
 {% endblock %}
 <!---Custom CSS File--->
-<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block css_style %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 <body>
     {% block content %}
         <div class="container">
             {% if form.errors %}
-                <div class="alert alert-danger alert-dismissible">
+                <div class="alert alert-danger alert-dismissible mt-2">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     <p class="text-center p-0">Mot de  passe ou identifiant incorrect</p>
                 </div>
@@ -26,10 +30,7 @@
                 value="{{ request.POST.password|default:'' }}"
                 placeholder="Enter your password">
                 <a href="#">Forgot password?</a>
-                <!--<input type="button" class="button" value="Login">-->
-                <button type="submit" class="button">
-                    Connexion
-                </button>
+                <input type="submit" class="button" value="Connexion">
             </form>
             </div>
         </div>
