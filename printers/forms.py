@@ -1,7 +1,9 @@
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, Printer
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
+import re
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -45,3 +47,60 @@ class CustomUserCreationForm(UserCreationForm):
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control'
             self.fields[field_name].widget.attrs['placeholder'] = self.fields[field_name].label
+
+class PrinterForm(forms.ModelForm):
+    class Meta:
+        model = Printer
+        fields = ['name', 'ink_level', 'paper_remaining', 'address', 'status']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': "form-control mb-3", 
+                'placeholder': 'Nom de l’imprimante'
+            }),
+            'ink_level': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Niveau d\'encre (%)'
+            }),
+            'paper_remaining': forms.NumberInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Nombre de feuilles restantes'
+            }),
+            'address': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Adresse de l’imprimante (192.168.0.xxx)'
+            }),
+            'status': forms.Select(attrs={
+                'class': "form-control mb-3", 
+            }),
+        }
+            
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)  # Récupérer l'utilisateur connecté
+        super().__init__(*args, **kwargs)
+        
+    def clean_ink_level(self):
+        ink_level = self.cleaned_data.get('ink_level')
+        if not (0 < ink_level <= 100):
+            raise ValidationError("Le niveau d'encre doit être compris entre 1 et 100.")
+        return ink_level
+    
+    def clean_paper_remaining(self):
+        paper_remaining = self.cleaned_data.get('paper_remaining')
+        if paper_remaining <= 0:
+            raise ValidationError("Le nombre de feuilles restantes doit être supérieur à 0.")
+        return paper_remaining
+    
+    def clean_address(self):
+        address = self.cleaned_data.get('address')
+        # Valider l'adresse sous le format "192.168.xxx.xxx"
+        if not re.match(r'^192\.168\.\d{1,3}\.\d{1,3}$', address):
+            raise ValidationError("L'adresse doit être au format '192.168.xxx.xxx'.")
+        return address
+            
+    def save(self, commit=True):
+        printer = super().save(commit=False)
+        if self.user:
+            printer.admin_user = self.user  # Attribuer l'utilisateur connecté comme admin_user
+        if commit:
+            printer.save()
+        return printer

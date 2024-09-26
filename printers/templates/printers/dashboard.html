@@ -64,7 +64,7 @@
                                         <td>{{ printer.address }}</td>
                                         <td>
                                             <a href="#" class="btn btn-primary btn-sm">Détails</a>
-                                            <a href="#" class="btn btn-warning btn-sm">Modifier</a>
+                                            <a href="{% url 'edit_printer' printer.slug %}" class="btn btn-warning btn-sm">Modifier</a>
                                         </td>
                                     </tr>
                                     {% empty %}
@@ -122,7 +122,7 @@
             if (alertBox) {
                 alertBox.style.display = 'none';
             }
-        }, 10000); // 10000 ms = 10 secondes
+        }, 6000); // 10000 ms = 10 secondes
         console.log('hello')
     </script>
     {% endblock %}

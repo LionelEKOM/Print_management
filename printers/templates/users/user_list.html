@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-<title>Archive</title>
+<title>Liste des utilisateurs</title>
 {% endblock %}
 <body>
     {% block content %}
@@ -11,6 +11,15 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
+                    {% if messages %}
+                    <div class="mt-3" id="alert-box">
+                        {% for message in messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }} 
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <h1 class="mt-4">Liste des utilisateurs</h1>
                         <hr class="border border-primary border-2 opacity-50">
                         <div class="card mb-3">
@@ -84,6 +93,16 @@
             {% include 'layouts/footer.html' %}
         </div>
     </div>
-    <script src="{% static 'js/scripts.js' %}"></script>
+    {% endblock %}
+    {% block js_script %}
+    <script>
+        setTimeout(function () {
+            var alertBox = document.getElementById('alert-box');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 6000); // 10000 ms = 10 secondes
+        console.log('hello')
+    </script>
     {% endblock %}
 </body>
