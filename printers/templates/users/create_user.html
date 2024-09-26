@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Archive</title>
+{% endblock %}
+<body>
+    {% block content %}
+    {% include 'layouts/Navbar.html' %}
+    <div id="layoutSidenav">
+        {% include 'layouts/Sidenav.html' %}
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Créer un nouvel utilisateur</h1>
+                        <hr class="border border-success border-2 opacity-50">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 mx-auto">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                                <div class="mb-3">
+                                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                                    {{ field }}
+                                                    
+                                                    <!-- Affichage des messages d'erreur -->
+                                                    {% if field.errors %}
+                                                        <div class="text-danger">
+                                                            {% for error in field.errors %}
+                                                                <p>{{ error }}</p>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        <button type="submit" class="btn btn-primary">Créer l'utilisateur</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                </div>
+            </main>
+            {% include 'layouts/footer.html' %}
+        </div>
+    </div>
+    {% endblock %}
+</body>

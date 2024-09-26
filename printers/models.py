@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 from django.template.defaultfilters import slugify
+import string
+import random
 
 # Create your models here.
 class CustomUser(AbstractUser):
@@ -22,7 +24,7 @@ class CustomUser(AbstractUser):
     )
     
     role = models.CharField(max_length=30, choices=ROLE_CHOICES, verbose_name='Rôle')
-    sexe = models.CharField(max_length=1, choices=SEX_CHOICES, verbose_name='Sexe')
+    sexe = models.CharField(max_length=10, choices=SEX_CHOICES, verbose_name='Sexe')
     slug = models.SlugField(max_length=200, unique=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True)
     created_on = models.DateField(blank=True, null=True)
@@ -34,12 +36,21 @@ class CustomUser(AbstractUser):
         return self.username
     
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        # Générer un slug unique basé sur le username s'il n'existe pas
+        if not self.slug:
+            self.slug = slugify(self.username)
+            # Vérifier l'unicité du slug
+            while CustomUser.objects.filter(slug=self.slug).exists():
+                random_suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=4))
+                self.slug = f"{self.slug}-{random_suffix}"
+
+        # Ajouter l'utilisateur au groupe en fonction de son rôle
+        super().save(*args, **kwargs)  # Appeler la méthode save du parent pour sauvegarder l'utilisateur
         if self.role == self.ADMIN:
-            group = Group.objects.get(name='ADMIN')
+            group, created = Group.objects.get_or_create(name='ADMIN')
             group.user_set.add(self)
         elif self.role == self.PERSONNEL:
-            group = Group.objects.get(name='Personnel')
+            group, created = Group.objects.get_or_create(name='Personnel')
             group.user_set.add(self)
 class Printer(models.Model):
     STATUS_CHOICES = [

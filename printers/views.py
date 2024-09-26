@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.contrib.auth.views import LoginView
+from django.views.generic import CreateView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse_lazy
+from printers.forms import CustomUserCreationForm
+from printers.models import CustomUser, PrintJob, Printer
 # Create your views here.
 
 class HomePageView(TemplateView):
@@ -20,4 +24,14 @@ class CustomLoginView(LoginView):
     
 @login_required
 def dashboard(request):
-    return render(request, 'printers/dashboard.html')
+    printers = Printer.objects.all()
+    print_jobs = PrintJob.objects.all()
+    return render(request, 'printers/dashboard.html', {
+        'printers': printers,
+        'print_jobs': print_jobs
+    })
+class CustomUserCreateView(CreateView):
+    model = CustomUser
+    form_class = CustomUserCreationForm
+    template_name = 'users/create_user.html'  # Le template que tu vas créer
+    success_url = reverse_lazy('login')  # Rediriger vers la page de login après création

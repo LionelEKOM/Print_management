@@ -21,8 +21,93 @@
                             {% endfor %}
                         </div>
                         {% endif %}
-                    <h1 class="mt-4">Historique des objets signalés</h1>
+                    <h1 class="mt-4">Tableau de Bord</h1>
                         <hr class="border border-primary border-2 opacity-50">
+
+                        <!-- Section d'aperçu des imprimantes -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>Imprimantes Disponibles</h3>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nom de l'imprimante</th>
+                                        <th>Niveau d'encre (%)</th>
+                                        <th>Feuilles restantes</th>
+                                        <th>Statut</th>
+                                        <th>Adresse</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for printer in printers %}
+                                    <tr>
+                                        <td>{{ printer.name }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" style="width: {{ printer.ink_level }}%" aria-valuenow="{{ printer.ink_level }}" aria-valuemin="0" aria-valuemax="100">{{ printer.ink_level }}%</div>
+                                            </div>
+                                        </td>
+                                        <td>{{ printer.paper_remaining }}</td>
+                                        <td>
+                                            {% if printer.status == 'DISPONIBLE' %}
+                                                <span class="badge bg-success">
+                                                    {{ printer.get_status_display }}
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-danger">
+                                                    {{ printer.get_status_display }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        
+                                        <td>{{ printer.address }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-primary btn-sm">Détails</a>
+                                            <a href="#" class="btn btn-warning btn-sm">Modifier</a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">Aucune imprimante disponible.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <!-- Section des travaux d'impression -->
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <h3>Travaux d'Impression en Cours</h3>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Utilisateur</th>
+                                            <th>Imprimante</th>
+                                            <th>Pages</th>
+                                            <th>Date</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for job in print_jobs %}
+                                        <tr>
+                                            <td>{{ job.user.username }}</td>
+                                            <td>{{ job.printer.name }}</td>
+                                            <td>{{ job.pages }}</td>
+                                            <td>{{ job.created_at|date:"d/m/Y H:i" }}</td>
+                                            <td>{{ job.status }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="text-center">Aucun travail d'impression en cours.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                 </div>
             </main>
             {% include 'layouts/footer.html' %}
