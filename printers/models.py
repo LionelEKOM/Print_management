@@ -65,7 +65,7 @@ class Printer(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DISPONIBLE', verbose_name="Statut")
     slug = models.SlugField(max_length=200, unique=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True, verbose_name="Modifié le")
-    created_on = models.DateField(blank=True, null=True, verbose_name="Date de création")
+    created_on = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")  # Auto-enregistrer la date lors de la création
     
     class Meta:
         ordering = ['-created_on']

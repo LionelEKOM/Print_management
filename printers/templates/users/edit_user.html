@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>formulaire d'édition</title>
+{% endblock %}
+<body>
+    {% block content %}
+    {% include 'layouts/Navbar.html' %}
+    <div id="layoutSidenav">
+        {% include 'layouts/Sidenav.html' %}
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Editer l'utilisateur</h1>
+                        <hr class="border border-primary border-2 opacity-50">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-success">Sauvegarder</button>
+                        </form>
+                </div>
+            </main>
+            {% include 'layouts/footer.html' %}
+        </div>
+    </div>
+    {% endblock %}
+</body>

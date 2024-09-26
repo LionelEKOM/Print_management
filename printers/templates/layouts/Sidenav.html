@@ -7,11 +7,11 @@
                     <div class="sb-nav-link-icon"><i class="fa fa-home"></i></div>
                     Accueil
                 </a>
-                <a class="nav-link" href="/signal">
+                <a class="nav-link" href="">
                     <div class="sb-nav-link-icon">
                         <i class="fa fa-print" aria-hidden="true"></i>
                     </div>
-                    Impressions
+                    Vos Impressions
                 </a>
                 {% if request.user.role == 'ADMIN' %}
                     <div class="sb-sidenav-menu-heading">ADMINISTRATION</div>
@@ -38,7 +38,7 @@
                     <div class="collapse" id="collapseLayout" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="/create-user">Ajouter</a>
-                            <a class="nav-link" href="">Details</a>
+                            <a class="nav-link" href="/users">Liste</a>
                         </nav>
                     </div>
                 {% endif %}

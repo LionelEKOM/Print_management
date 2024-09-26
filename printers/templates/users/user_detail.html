@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Détails de l'utilisateur</title>
+{% endblock %}
+<body>
+    {% block content %}
+    {% include 'layouts/Navbar.html' %}
+    <div id="layoutSidenav">
+        {% include 'layouts/Sidenav.html' %}
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Détails de l'utilisateur <strong><i>{{ user.username }}</i></strong></h1>
+                        <hr class="border border-primary border-2 opacity-50">
+                        <div class="card w-50">
+                            <h5 class="card-header">Informations</h5>
+                            <img style="width: 10rem;" src="{% static 'img/printer.png' %}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                              <h5 class="card-title">{{ user.first_name }} {{ user.last_name }}</h5>
+                              <p class="card-text"><strong>Email : </strong>{{ user.email }}</p>
+                              <p class="card-text"><strong>Role :</strong>{{ user.get_role_display }}</p>
+                              <p class="card-text"><b>Sexe :</b> {{ user.sexe }}</p>
+                              <p class="card-text"><b>Date de Creation : </b> {{ user.created_on }}</p>
+                              <a href="{% url 'edit_user' user.slug %}" class="btn btn-primary">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                Éditer</a>
+                            </div>
+                        </div>
+                </div>
+            </main>
+            {% include 'layouts/footer.html' %}
+        </div>
+    </div>
+    {% endblock %}
+</body>

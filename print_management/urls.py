@@ -19,7 +19,7 @@ from django.shortcuts import redirect
 from django.urls import path
 from django.conf.urls.static import static
 from print_management import settings
-from printers.views import CustomLoginView, CustomUserCreateView, HomePageView, dashboard
+from printers.views import CustomLoginView, CustomUserCreateView, CustomUserDetailView, CustomUserUpdateView, HomePageView, UserListView, dashboard
 from django.contrib.auth.views import (LogoutView)
 
 urlpatterns = [
@@ -28,5 +28,8 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('dashboard/', dashboard, name='dashboard'),
     path('create-user/', CustomUserCreateView.as_view(), name='create_user'),
+    path('users/', UserListView.as_view(), name='user_list'),
+    path('users/<slug:slug>/edit/', CustomUserUpdateView.as_view(), name='edit_user'),
+    path('users/<slug:slug>/details/', CustomUserDetailView.as_view(), name='user_details'),
     path('logout/', LogoutView.as_view(), name='logout')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
