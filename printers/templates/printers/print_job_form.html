@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Soumettre un travail d'impression</title>
+{% endblock %}
+<body>
+    {% block content %}
+    {% include 'layouts/Navbar.html' %}
+    <div id="layoutSidenav">
+        {% include 'layouts/Sidenav.html' %}
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Soumettre un travail d'impression</h1>
+                        <hr class="border border-primary border-2 opacity-50">
+                        <div class="row">
+                            <div class="col-6 mx-auto">
+                                <form method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        Soumettre
+                                    </button>
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fa fa-undo" aria-hidden="true"></i>
+                                        <a style="text-decoration: none; color: #000;" href="/dashboard">
+                                            Retour
+                                        </a>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+            </main>
+            {% include 'layouts/footer.html' %}
+        </div>
+    </div>
+    {% endblock %}
+</body>

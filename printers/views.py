@@ -5,9 +5,10 @@ from django.views.generic import CreateView
 from django.views.generic.edit import UpdateView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.urls import reverse_lazy
-from printers.forms import CustomUserCreationForm, PrinterForm
+from printers.forms import CustomUserCreationForm, PrintJobForm, PrinterForm
 from printers.models import CustomUser, PrintJob, Printer
 from django import forms
 # Create your views here.
@@ -126,3 +127,21 @@ class PrinterUpdateView(UpdateView):
         messages.success(self.request, f"imprimante {name} a édité avec succès !")
         return response
     
+class PrintJobCreateView(LoginRequiredMixin, CreateView):
+    model = PrintJob
+    form_class = PrintJobForm
+    template_name = 'printers/print_job_form.html'
+    success_url = reverse_lazy('print_job_list')  # Rediriger vers une page où les utilisateurs peuvent voir leurs travaux d'impression
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user  # Associer l'utilisateur connecté au travail d'impression
+        messages.success(self.request, "Votre travail d'impression a été soumis avec succès!")
+        return super().form_valid(form)
+    
+class PrintJobListView(LoginRequiredMixin, ListView):
+    model = PrintJob
+    template_name = 'printers/print_job_list.html'
+    context_object_name = 'print_jobs'
+
+    def get_queryset(self):
+        return PrintJob.objects.filter(user=self.request.user).order_by('-submitted_at')

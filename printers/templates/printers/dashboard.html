@@ -95,8 +95,8 @@
                                         <tr>
                                             <td>{{ job.user.username }}</td>
                                             <td>{{ job.printer.name }}</td>
-                                            <td>{{ job.pages }}</td>
-                                            <td>{{ job.created_at|date:"d/m/Y H:i" }}</td>
+                                            <td>{{ job.copies }}</td>
+                                            <td>{{ job.submitted_at|date:"d/m/Y H:i" }}</td>
                                             <td>{{ job.status }}</td>
                                         </tr>
                                         {% empty %}

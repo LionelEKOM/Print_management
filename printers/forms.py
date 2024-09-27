@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomUser, Printer
+from .models import CustomUser, PrintJob, Printer
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
@@ -104,3 +104,25 @@ class PrinterForm(forms.ModelForm):
         if commit:
             printer.save()
         return printer
+    
+class PrintJobForm(forms.ModelForm):
+    class Meta:
+        model = PrintJob
+        fields = ['printer', 'document', 'copies']
+        widgets = {
+            'printer': forms.Select(attrs={'class': 'form-control'}),
+            'document': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'copies': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'placeholder': 'Nombre de copies'}),
+        }
+        labels = {
+            'printer': 'Choisissez une imprimante',
+            'document': 'Document à imprimer',
+            'copies': 'Nombre de copies',
+        }
+
+    def clean_document(self):
+        document = self.cleaned_data.get('document')
+        # Ajouter une validation pour le format de fichier si nécessaire
+        if not document.name.endswith(('.pdf', '.docx', '.txt')):
+            raise forms.ValidationError("Le format de fichier n'est pas supporté. Veuillez uploader un fichier PDF, DOCX ou TXT.")
+        return document

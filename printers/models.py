@@ -81,14 +81,15 @@ class Printer(models.Model):
     
 class PrintJob(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="print_jobs")  # Utilisateur qui demande l'impression
-    printer = models.ForeignKey(Printer, on_delete=models.CASCADE, related_name="print_jobs")  # Imprimante utilisée
-    pages = models.IntegerField(verbose_name="Nombre de pages")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de la tâche")
+    printer = models.ForeignKey(Printer, on_delete=models.CASCADE, related_name='print_jobs', verbose_name="Imprimante")  # Imprimante utilisée
+    # pages = models.IntegerField(verbose_name="Nombre de pages")
+    copies = models.PositiveIntegerField(default=1, verbose_name="Nombre de copies")
+    submitted_at = models.DateTimeField(auto_now_add=True, verbose_name="Soumis le")
+    completed_at = models.DateTimeField(null=True, blank=True, verbose_name="Terminé le")
     status = models.CharField(max_length=50, choices=[('PENDING', 'En attente'), ('COMPLETED', 'Terminé'), ('FAILED', 'Échoué')], default='PENDING', verbose_name="Statut de la tâche")
-    file = models.FileField(upload_to='uploads/', null=True, blank=True, verbose_name="Fichier à imprimer")  # Fichier téléchargé par l'utilisateur
-    
+    document = models.FileField(upload_to='documents/', null=True, blank=True, verbose_name="Fichier à imprimer")  # Fichier téléchargé par l'utilisateur
     def __str__(self):
-        return f"Tâche d'impression de {self.user.username} sur {self.printer.name}"
+        return f"Impression de {self.document.name} par {self.user.username} sur {self.printer.name}"
 
     
     

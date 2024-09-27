@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+<title>Mes Travaux d'impression</title>
+{% endblock %}
+<body>
+    {% block content %}
+    {% include 'layouts/Navbar.html' %}
+    <div id="layoutSidenav">
+        {% include 'layouts/Sidenav.html' %}
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Mes Travaux d'impression</h1>
+                        <hr class="border border-primary border-2 opacity-50">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Imprimante</th>
+                                    <th>Status</th>
+                                    <th>Soumis le</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in print_jobs %}
+                                <tr>
+                                    <td>{{ job.document.name }}</td>
+                                    <td>{{ job.printer.name }}</td>
+                                    <td>{{ job.get_status_display }}</td>
+                                    <td>{{ job.submitted_at }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucun travail d'impression en cours.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fa fa-undo" aria-hidden="true"></i>
+                            <a style="text-decoration: none; color: #000;" href="/dashboard">
+                                Retour
+                            </a>
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-print" aria-hidden="true"></i>
+                            <a style="text-decoration: none; color: #000;" href="/print">
+                                Lancer une impression
+                            </a>
+                        </button>
+                </div>
+            </main>
+            {% include 'layouts/footer.html' %}
+        </div>
+    </div>
+    {% endblock %}
+</body>
