@@ -11,6 +11,16 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
+                    <!-- Afficher les messages -->
+                    {% if messages %}
+                    <div class="mt-3" id="alert-box">
+                        {% for message in messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }} 
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <h1 class="mt-4">Mes Travaux d'impression</h1>
                         <hr class="border border-primary border-2 opacity-50">
                         <table class="table table-striped">
@@ -54,5 +64,16 @@
             {% include 'layouts/footer.html' %}
         </div>
     </div>
+    {% endblock %}
+    {% block js_script %}
+    <script>
+        setTimeout(function () {
+            var alertBox = document.getElementById('alert-box');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 6000); // 10000 ms = 10 secondes
+        console.log('hello')
+    </script>
     {% endblock %}
 </body>

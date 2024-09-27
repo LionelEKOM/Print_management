@@ -18,8 +18,12 @@
                                 <form method="post">
                                     {% csrf_token %}
                                     {{ form.as_p }}
-                                    <button type="submit" class="btn btn-success">Sauvegarder</button>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        Sauvegarder
+                                    </button>
                                     <button type="submit" class="btn btn-warning">
+                                        <i class="fa fa-undo" aria-hidden="true"></i>
                                         <a style="text-decoration: none; color: #000;" href="/dashboard">
                                             Retour
                                         </a>

@@ -122,7 +122,26 @@ class PrintJobForm(forms.ModelForm):
 
     def clean_document(self):
         document = self.cleaned_data.get('document')
-        # Ajouter une validation pour le format de fichier si nécessaire
+    
+        # Vérifier si un document a été fourni
+        if document is None:
+            raise forms.ValidationError("Veuillez uploader un document.")
+        
+        # Validation du type de fichier
         if not document.name.endswith(('.pdf', '.docx', '.txt')):
             raise forms.ValidationError("Le format de fichier n'est pas supporté. Veuillez uploader un fichier PDF, DOCX ou TXT.")
+        
         return document
+    
+    def clean_copies(self):
+        copies = self.cleaned_data.get('copies')
+        if not (0 < copies <= 100):
+            raise ValidationError("Le nombre de copies doit être doit être supérieur à 1.")
+        return copies
+    
+    def clean_printer(self):
+        printer = self.cleaned_data.get('printer')
+        # Validation de la sélection de l'imprimante
+        if not printer:
+            raise ValidationError("Veuillez choisir une imprimante.")
+        return printer
