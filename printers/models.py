@@ -33,6 +33,10 @@ class CustomUser(AbstractUser):
         ordering = ['-created_on']
         verbose_name = "Utilisateur"
     def __str__(self):
+        """
+        Retourne une représentation lisible de l'objet CustomUser, à savoir son nom d'utilisateur.
+        """
+        
         return self.username
     
     def save(self, *args, **kwargs):
@@ -88,7 +92,12 @@ class PrintJob(models.Model):
     completed_at = models.DateTimeField(null=True, blank=True, verbose_name="Terminé le")
     status = models.CharField(max_length=50, choices=[('PENDING', 'En attente'), ('COMPLETED', 'Terminé'), ('FAILED', 'Échoué')], default='PENDING', verbose_name="Statut de la tâche")
     document = models.FileField(upload_to='documents/', null=True, blank=True, verbose_name="Fichier à imprimer")  # Fichier téléchargé par l'utilisateur
+    
     def __str__(self):
+        """
+        Afficher une représentation lisible de l'objet PrintJob, en incluant le nom du document, le nom de l'utilisateur et le nom de l'imprimante.
+        """
+        
         return f"Impression de {self.document.name} par {self.user.username} sur {self.printer.name}"
 
     

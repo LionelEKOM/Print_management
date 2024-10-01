@@ -21,6 +21,11 @@ class CustomLoginView(LoginView):
     
     def form_valid(self, form):
         # Récupérer le nom d'utilisateur de l'utilisateur authentifié
+        """
+        Surcharge de la méthode form_valid pour ajouter un message de connexion
+        réussie lorsque l'utilisateur est authentifié avec succès.
+        """
+        
         username = self.request.user.username
         # Ajoute un message de succès lorsque l'utilisateur est authentifié avec succès
         messages.success(self.request, f"Connexion réussie. Bienvenue {username} sur votre tableau de bord !")
@@ -28,6 +33,10 @@ class CustomLoginView(LoginView):
     
 @login_required
 def dashboard(request):
+    """
+    Affiche le tableau de bord avec la liste des imprimantes et des travaux d'impression.
+    """
+    
     printers = Printer.objects.all()
     print_jobs = PrintJob.objects.all()
     return render(request, 'printers/dashboard.html', {
@@ -42,6 +51,13 @@ class CustomUserCreateView(CreateView):
     
     def form_valid(self, form):
         # Enregistrer l'utilisateur
+        """
+        Enregistrer l'utilisateur et ajouter un message de confirmation.
+        
+        Appelle la méthode form_valid de la classe parente pour enregistrer l'utilisateur,
+        puis ajoute un message de confirmation une fois l'enregistrement terminé avec succès.
+        """
+        
         response = super().form_valid(form)
         # Ajouter un message de confirmation
         username = form.cleaned_data.get('username')
@@ -67,6 +83,11 @@ class CustomUserUpdateView(UpdateView):
     slug_url_kwarg = 'slug'
     
     def clean_username(self):
+       
+        # Vérifie que le nom d'utilisateur n'est pas déjà utilisé par un autre utilisateur.
+        # Si le nom d'utilisateur existe déjà, lève une erreur de formulaire.
+        # Sinon, renvoie le nom d'utilisateur nettoyé.
+        
         username = self.cleaned_data.get('username')
         if CustomUser.objects.filter(username=username).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("Un utilisateur avec ce nom d'utilisateur existe déjà.")
@@ -74,6 +95,11 @@ class CustomUserUpdateView(UpdateView):
     
     def form_valid(self, form):
         # Enregistrer l'utilisateur
+        """
+        Enregistrer l'utilisateur et ajouter un message de confirmation.
+        
+        Ajoute un message de confirmation une fois l'utilisateur édité avec succès.
+        """
         response = super().form_valid(form)
         # Ajouter un message de confirmation
         username = form.cleaned_data.get('username')
@@ -94,17 +120,36 @@ class PrinterCreateView(CreateView):
     success_url = reverse_lazy('dashboard')  # Rediriger après la création
     
     def get_form_kwargs(self):
+        """
+        Ajouter l'utilisateur connecté dans les kwargs du formulaire.
+        
+        Ce méthode est appelée par la classe CreateView pour initialiser les kwargs
+        du formulaire. On ajoute l'utilisateur connecté pour qu'il puisse être
+        utilisé dans le formulaire.
+        """
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user  # Passer l'utilisateur connecté
         return kwargs
 
     def form_valid(self, form):
+        """
+        Enregistrer l'imprimante et ajouter un message de confirmation.
+        
+        Enregistrer l'imprimante créée et ajouter un message de confirmation une fois l'enregistrement
+        terminé avec succès.
+        """
         printer = form.save(commit=False)
         printer.save()
         return super().form_valid(form)
     
     def form_valid(self, form):
         # Enregistrer l'utilisateur
+        """
+        Enregistrer l'utilisateur et ajouter un message de confirmation.
+        
+        Ajoute un message de confirmation une fois l'imprimante créée avec succès.
+        """
+    
         response = super().form_valid(form)
         # Ajouter un message de confirmation
         messages.success(self.request, f"imprimante a été créé avec succès !")
@@ -134,6 +179,10 @@ class PrintJobCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('print_job_list')  # Rediriger vers une page où les utilisateurs peuvent voir leurs travaux d'impression
 
     def form_valid(self, form):
+        """
+        Associate the current user to the print job before saving it,
+        then show a success message.
+        """
         form.instance.user = self.request.user  # Associer l'utilisateur connecté au travail d'impression
         messages.success(self.request, "Votre travail d'impression a été soumis avec succès!")
         return super().form_valid(form)
@@ -144,4 +193,8 @@ class PrintJobListView(LoginRequiredMixin, ListView):
     context_object_name = 'print_jobs'
 
     def get_queryset(self):
+        """
+        Return a queryset of print jobs ordered by submission time in descending order
+        for the current user.
+        """
         return PrintJob.objects.filter(user=self.request.user).order_by('-submitted_at')
