@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, Group
 from django.template.defaultfilters import slugify
 import string
 import random
+from django.utils import timezone
 
 # Create your models here.
 class CustomUser(AbstractUser):
@@ -69,7 +70,7 @@ class Printer(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DISPONIBLE', verbose_name="Statut")
     slug = models.SlugField(max_length=200, unique=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True, verbose_name="Modifié le")
-    created_on = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")  # Auto-enregistrer la date lors de la création
+    created_on = models.DateTimeField(default=timezone.now, verbose_name="Date de création")  # Auto-enregistrer la date lors de la création
     
     class Meta:
         ordering = ['-created_on']
@@ -88,7 +89,7 @@ class PrintJob(models.Model):
     printer = models.ForeignKey(Printer, on_delete=models.CASCADE, related_name='print_jobs', verbose_name="Imprimante")  # Imprimante utilisée
     # pages = models.IntegerField(verbose_name="Nombre de pages")
     copies = models.PositiveIntegerField(default=1, verbose_name="Nombre de copies")
-    submitted_at = models.DateTimeField(auto_now_add=True, verbose_name="Soumis le")
+    submitted_at = models.DateTimeField(default=timezone.now, verbose_name="Soumis le")
     completed_at = models.DateTimeField(null=True, blank=True, verbose_name="Terminé le")
     status = models.CharField(max_length=50, choices=[('PENDING', 'En attente'), ('COMPLETED', 'Terminé'), ('FAILED', 'Échoué')], default='PENDING', verbose_name="Statut de la tâche")
     document = models.FileField(upload_to='documents/', null=True, blank=True, verbose_name="Fichier à imprimer")  # Fichier téléchargé par l'utilisateur
