@@ -77,3 +77,33 @@ body{
 .form input.button:hover{
   background: #006653;
 }
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group .form-control {
+  height: 60px; /* Même hauteur que les autres champs */
+  width: 100%; /* Prend toute la largeur */
+  padding: 0 15px; /* Padding à l'intérieur du champ */
+  font-size: 17px; /* Taille de la police */
+  margin-bottom: 1.3rem; /* Espacement entre les champs */
+  border: 1px solid #ddd; /* Bordure standard */
+  border-radius: 6px; /* Coins arrondis */
+  outline: none; /* Pas de contour sur focus */
+}
+
+.input-group button {
+  height: 60px; /* Aligner la hauteur avec le champ de mot de passe */
+  border: none; /* Pas de bordure */
+  background: transparent; /* Fond transparent */
+  cursor: pointer; /* Curseur pointer */
+  display: flex; /* Centrer l'icône */
+  align-items: center; /* Centrer verticalement */
+  padding: 0 10px; /* Padding latéral */
+}
+
+.input-group button:focus {
+  outline: none; /* Pas de contour sur focus */
+}

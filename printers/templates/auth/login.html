@@ -2,6 +2,8 @@
 {% block title %}
 <title>Login Form</title>
 {% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <!---Custom CSS File--->
 {% load bootstrap5 %}
 {% bootstrap_css %}
@@ -13,7 +15,7 @@
     {% block content %}
         <div class="container">
             {% if form.errors %}
-                <div class="alert alert-danger alert-dismissible mt-2">
+                <div class="alert alert-danger alert-dismissible mt-3">
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     <p class="text-center p-0">Mot de  passe ou identifiant incorrect</p>
                 </div>
@@ -25,14 +27,40 @@
                 <input type="text" name="username"
                 value="{{ request.POST.username|default:'' }}" 
                 placeholder="Enter your username">
-                <input type="password"
-                name="password"
-                value="{{ request.POST.password|default:'' }}"
-                placeholder="Enter your password">
+                <div class="input-group mb-3">
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-control"
+                           value="{{ request.POST.password|default:'' }}"
+                           placeholder="Entrez votre mot de passe">
+                    <button
+                    style="height: 60px;"
+                    class="btn btn-outline-secondary" 
+                    type="button" id="togglePassword">
+                        <i class="fa fa-eye" aria-hidden="true" id="passwordIcon"></i>
+                    </button>
+                </div>
                 <a href="#">Forgot password?</a>
                 <input type="submit" class="button" value="Connexion">
             </form>
             </div>
         </div>
         {% endblock %}
+        <script>
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                const passwordIcon = document.getElementById('passwordIcon');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    passwordIcon.classList.remove('fa-eye');
+                    passwordIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            });
+        </script>            
 </body>
