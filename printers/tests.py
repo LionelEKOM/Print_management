@@ -8,9 +8,17 @@ from printers.models import CustomUser  # Import du modèle CustomUser
 class PrinterModelTest(TestCase):
     def setUp(self):
         # Crée un utilisateur admin pour tester avec le modèle CustomUser
+        """
+        Crée un utilisateur admin pour tester avec le modèle CustomUser.
+        """
+        
         self.user = CustomUser.objects.create_user(username='admin', password='admin123')
 
     def test_create_printer(self):
+        """
+        Test que l'on peut créer une imprimante en enregistrant correctement
+        les informations.
+        """
         printer = Printer.objects.create(
             name="HP LaserJet",
             admin_user=self.user,
@@ -29,6 +37,12 @@ class CustomUserCreateViewTest(TestCase):
 
     def test_user_creation(self):
         # Données pour la création d'un utilisateur, y compris 'role' et 'sexe'
+        """
+        Test de la création d'un utilisateur avec les données valides.
+
+        Vérifie que l'utilisateur est bien créé, que la redirection est correcte
+        et qu'un message de succès est affiché.
+        """
         data = {
             'username': 'newuser',
             'first_name': 'John',

@@ -131,6 +131,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'  # URL de connexion
 LOGIN_REDIRECT_URL = '/dashboard/'  # Redirection après connexion réussie
-LOGOUT_REDIRECT_URL = '/'  # Redirection après déconnexion
+LOGOUT_REDIRECT_URL = '/login/'  # Redirection après déconnexion
 
 AUTH_USER_MODEL = 'printers.CustomUser'
