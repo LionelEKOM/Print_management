@@ -22,6 +22,12 @@
                     {% endif %}
                     <h1 class="mt-4">Liste des utilisateurs</h1>
                         <hr class="border border-primary border-2 opacity-50">
+                        <button type="button" class="btn btn-primary mb-3">
+                            <i class="fa fa-plus-square" aria-hidden="true"></i>
+                            <a href="/create-user" style="color: white; text-decoration: none;">
+                                Ajouter
+                            </a>
+                        </button>
                         <div class="card mb-3">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -55,6 +61,15 @@
                                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                                 Détails
                                             </a>
+                                            {% if user.is_blocked %}
+                                                <a href="{% url 'unblock_user' user.slug %}" class="btn btn-sm btn-success">
+                                                    <i class="fa fa-unlock" aria-hidden="true"></i> Débloquer
+                                                </a>
+                                            {% else %}
+                                                <a href="{% url 'block_user' user.slug %}" class="btn btn-sm btn-danger">
+                                                    <i class="fa fa-lock" aria-hidden="true"></i> Bloquer
+                                                </a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% empty %}

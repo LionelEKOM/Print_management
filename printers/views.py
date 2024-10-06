@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.contrib.auth.views import LoginView
 from django.views.generic import CreateView
@@ -12,6 +12,7 @@ from printers.forms import CustomUserCreationForm, PrintJobForm, PrinterForm
 from printers.models import CustomUser, PrintJob, Printer
 from django import forms
 from django.db.models import Sum
+from django.urls import reverse
 # Create your views here.
 
 class HomePageView(TemplateView):
@@ -27,10 +28,23 @@ class CustomLoginView(LoginView):
         réussie lorsque l'utilisateur est authentifié avec succès.
         """
         
-        username = self.request.user.username
-        # Ajoute un message de succès lorsque l'utilisateur est authentifié avec succès
-        messages.success(self.request, f"Connexion réussie. Bienvenue {username} sur votre tableau de bord !")
+        # username = self.request.user.username
+        # # Ajoute un message de succès lorsque l'utilisateur est authentifié avec succès
+        # messages.success(self.request, f"Connexion réussie. Bienvenue {username} sur votre tableau de bord !")
+        
+        # Vérification si l'utilisateur est bloqué
+        user = form.get_user()
+        if user.is_blocked:
+            # Rediriger vers une page de refus d'accès si l'utilisateur est bloqué
+            messages.error(self.request, "Votre accès a été restreint. Veuillez contacter l'administrateur.")
+            return redirect('access_denied')  # Nom de l'URL vers la page de refus d'accès
+
+        # Si l'utilisateur n'est pas bloqué, procéder à la connexion normale
+        messages.success(self.request, f"Connexion réussie. Bienvenue {user.username} sur votre tableau de bord !")
         return super().form_valid(form)
+
+class AccessDeniedView(TemplateView):
+    template_name = 'auth/access_denied.html'
     
 @login_required
 def dashboard(request):
@@ -211,3 +225,24 @@ class PrinterDetailView(DetailView):
         context['print_count'] = self.object.print_jobs.count()  # Nombre d'impressions
         context['total_pages_printed'] = self.object.print_jobs.aggregate(Sum('copies'))['copies__sum'] or 0  # Total des pages imprimées
         return context
+    
+class BlockedUserMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_blocked:
+            messages.error(request, "Votre compte est bloqué. Veuillez contacter l'administrateur.")
+            return redirect('login')  # Rediriger vers une page appropriée
+        return super().dispatch(request, *args, **kwargs)
+    
+def block_user(request, slug):
+    user = get_object_or_404(CustomUser, slug=slug)
+    user.is_blocked = True
+    user.save()
+    messages.success(request, f"L'utilisateur {user.username} a été bloqué.")
+    return redirect(reverse('user_list'))
+
+def unblock_user(request, slug):
+    user = get_object_or_404(CustomUser, slug=slug)
+    user.is_blocked = False
+    user.save()
+    messages.success(request, f"L'utilisateur {user.username} a été débloqué.")
+    return redirect(reverse('user_list'))

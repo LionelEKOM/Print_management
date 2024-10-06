@@ -19,18 +19,21 @@ from django.shortcuts import redirect
 from django.urls import path
 from django.conf.urls.static import static
 from print_management import settings
-from printers.views import CustomLoginView, CustomUserCreateView, CustomUserDetailView, CustomUserUpdateView, HomePageView, PrintJobCreateView, PrintJobListView, PrinterCreateView, PrinterDetailView, PrinterUpdateView, UserListView, dashboard
+from printers.views import AccessDeniedView, CustomLoginView, CustomUserCreateView, CustomUserDetailView, CustomUserUpdateView, HomePageView, PrintJobCreateView, PrintJobListView, PrinterCreateView, PrinterDetailView, PrinterUpdateView, UserListView, block_user, dashboard, unblock_user
 from django.contrib.auth.views import (LogoutView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomePageView.as_view(), name='home'),
     path('login/', CustomLoginView.as_view(), name='login'),
+    path('access-denied/', AccessDeniedView.as_view(), name='access_denied'),
     path('dashboard/', dashboard, name='dashboard'),
     path('create-user/', CustomUserCreateView.as_view(), name='create_user'),
     path('users/', UserListView.as_view(), name='user_list'),
     path('users/<slug:slug>/edit/', CustomUserUpdateView.as_view(), name='edit_user'),
     path('users/<slug:slug>/details/', CustomUserDetailView.as_view(), name='user_details'),
+    path('user/<slug:slug>/block/', block_user, name='block_user'),
+    path('user/<slug:slug>/unblock/', unblock_user, name='unblock_user'),
     # path('printers/', PrinterListView.as_view(), name='printers_list'),
     path('print/', PrintJobCreateView.as_view(), name='submit_print_job'),
     path('print/jobs/', PrintJobListView.as_view(), name='print_job_list'),
