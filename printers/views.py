@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from printers.forms import CustomUserCreationForm, PrintJobForm, PrinterForm
 from printers.models import CustomUser, PrintJob, Printer
 from django import forms
+from django.db.models import Sum
 # Create your views here.
 
 class HomePageView(TemplateView):
@@ -198,3 +199,15 @@ class PrintJobListView(LoginRequiredMixin, ListView):
         for the current user.
         """
         return PrintJob.objects.filter(user=self.request.user).order_by('-submitted_at')
+    
+class PrinterDetailView(DetailView):
+    model = Printer
+    template_name = 'printers/printer_detail.html'
+    context_object_name = 'printer'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Compter le nombre de travaux d'impression pour cette imprimante
+        context['print_count'] = self.object.print_jobs.count()  # Nombre d'impressions
+        context['total_pages_printed'] = self.object.print_jobs.aggregate(Sum('copies'))['copies__sum'] or 0  # Total des pages imprimées
+        return context

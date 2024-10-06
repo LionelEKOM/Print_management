@@ -63,7 +63,7 @@
                                         
                                         <td>{{ printer.address }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-primary btn-sm">Détails</a>
+                                            <a href="{% url 'printer_detail' printer.slug %}" class="btn btn-primary btn-sm">Détails</a>
                                             <a href="{% url 'edit_printer' printer.slug %}" class="btn btn-warning btn-sm">Modifier</a>
                                         </td>
                                     </tr>
